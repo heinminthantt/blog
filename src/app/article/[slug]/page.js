@@ -5,7 +5,6 @@ import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import ReadingProgress from "./ReadingProgress";
-
 // Tell Next.js exactly what slugs exist at build time
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), "content");
@@ -14,7 +13,6 @@ export async function generateStaticParams() {
     slug: fileName.replace(/\.md$/, ""),
   }));
 }
-
 // Dynamic metadata for SEO
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -22,13 +20,11 @@ export async function generateMetadata({ params }) {
   const fullPath = path.join(postsDirectory, `${slug}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data } = matter(fileContents);
-
   return {
     title: `${data.title} — Hein's Blog`,
     description: data.summary || `An article by Hein Min Thant`,
   };
 }
-
 // The Article Page Component
 export default async function ArticlePage({ params }) {
   const { slug } = await params;
@@ -36,12 +32,11 @@ export default async function ArticlePage({ params }) {
   const fullPath = path.join(postsDirectory, `${slug}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
-
+  const isBurmese = slug.startsWith('mm-');
   return (
     <>
       {/* Reading Progress Bar */}
       <ReadingProgress />
-
       <div
         style={{
           minHeight: "calc(100vh - 120px)",
@@ -67,7 +62,6 @@ export default async function ArticlePage({ params }) {
             </svg>
             All articles
           </Link>
-
           {/* Article Header */}
           <header
             style={{ marginTop: "2.5rem", marginBottom: "2.5rem" }}
@@ -76,14 +70,12 @@ export default async function ArticlePage({ params }) {
             <h1 className="article-header-title" id="article-title">
               {data.title}
             </h1>
-
             <div className="article-header-meta">
               {/* Date Badge */}
               <div className="badge" style={{ margin: 0 }}>
                 <span className="badge-dot"></span>
                 {data.date}
               </div>
-
               {/* Tags */}
               {data.tags &&
                 data.tags.length > 0 &&
@@ -93,7 +85,6 @@ export default async function ArticlePage({ params }) {
                   </span>
                 ))}
             </div>
-
             {/* Summary */}
             {data.summary && (
               <p
@@ -109,19 +100,24 @@ export default async function ArticlePage({ params }) {
                 {data.summary}
               </p>
             )}
+            {data.translation && (
+              <Link
+                href={`/article/${data.translation.replace(/\.md$/, "")}`}
+                className="tag-pill mt-5 hover:underline"
+              >
+                {isBurmese ? "Read in English" : "မြန်မာဘာသာဖြင့် ဖတ်ရန်"}
+              </Link>
+            )}
           </header>
-
           {/* Divider */}
           <div
             className="divider animate-fade-in-up animate-delay-2"
             style={{ marginBottom: "2.5rem" }}
           ></div>
-
           {/* The Markdown Body Content */}
           <div className="prose-custom animate-fade-in-up animate-delay-3">
             <MDXRemote source={content} />
           </div>
-
           {/* Article Footer */}
           <div
             style={{

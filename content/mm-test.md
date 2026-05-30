@@ -1,12 +1,11 @@
 ---
-title: "Mastering Git Internals: What Happens When You Commit"
+title: "Mastering Git Internals: မြန်မာလို"
 date: "2026-05-30"
-translation: mm-test.md
+translation : test.md
 summary: "An exploration into how Git handles files under the hood, breaking down blobs, trees, and commits."
 tags: ["git", "internals", "devtools"]
 ---
 # Mastering Git Internals
-
 Today I decided to look past the basic `git add` and `git commit` surface commands to understand how Git actually tracks our code changes under the hood. 
 Git isn't just a simple file tracker—it's a content-addressable filesystem.
 
